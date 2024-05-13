@@ -12,10 +12,10 @@ import javax.swing.JTable;
 public class MapearLexemas {
     
     // Criando um HashMap que mapeia nomes para idades
-    private HashMap<String, Simbolo> mapaIdades;
+    private HashMap<String, Simbolo> mapaLexemas;
 
     public MapearLexemas(String path){
-        this.mapaIdades = new HashMap<>();
+        this.mapaLexemas = new HashMap<>();
         this.PopularMapa(path);
     }
 
@@ -71,18 +71,18 @@ public class MapearLexemas {
         }
 
         if (palavrasReservadas.Pesquisar(palavra) != 0) {
-            this.mapaIdades.put(palavra, palavrasReservadas.BuscarSimbolo(palavra));
+            this.mapaLexemas.put(palavra, palavrasReservadas.BuscarSimbolo(palavra));
         } else {
             try {
                 switch (detectarTipoPalavra(palavra)) {
                     case "STRING_CONST":
-                        this.mapaIdades.put(palavra, palavrasReservadas.inserirConst(palavra, "STRING_CONST"));
+                        this.mapaLexemas.put(palavra, palavrasReservadas.inserirConst(palavra, "STRING_CONST"));
                         break;
                     case "NUM_CONST":
-                        this.mapaIdades.put(palavra, palavrasReservadas.inserirConst(palavra, "NUM_CONST"));
+                        this.mapaLexemas.put(palavra, palavrasReservadas.inserirConst(palavra, "NUM_CONST"));
                         break;
                     case "ID":
-                        this.mapaIdades.put(palavra, palavrasReservadas.InserirID(palavra));
+                        this.mapaLexemas.put(palavra, palavrasReservadas.InserirID(palavra));
                         break;
                 }
             } catch (Exception e) {
@@ -108,7 +108,7 @@ public class MapearLexemas {
         JFrame frame = new JFrame("Tabela de Lexemas");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     
-        LexemaTableModel tableModel = new LexemaTableModel(mapaIdades);
+        LexemaTableModel tableModel = new LexemaTableModel(mapaLexemas);
         JTable table = new JTable(tableModel);
     
         JScrollPane scrollPane = new JScrollPane(table);
