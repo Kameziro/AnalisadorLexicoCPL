@@ -4,7 +4,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.HashMap;
-
+import java.util.regex.*;
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -36,19 +36,19 @@ public class MapearLexemas {
         boolean dentroString = false;
         StringBuilder palavraAtual = new StringBuilder();
     
+        // Regex para filtrar caracteres especiais, exceto pontuação ABNT
+        String regex = "[^a-zA-Z0-9À-ÖØ-öø-ÿ,.:;!?\\s']";
+    
         for (int i = 0; i < linha.length(); i++) {
             char c = linha.charAt(i);
     
             if (c == '\'') {
                 dentroString = !dentroString;
                 palavraAtual.append(c);
-                if (!dentroString) {
-                    processarPalavra(palavraAtual.toString(), palavrasReservadas);
-                    palavraAtual.setLength(0); // Limpar a palavra atual
-                }
             } else if (dentroString) {
                 palavraAtual.append(c);
             } else if (c == ' ' || c == '\t' || c == '\n' || c == '\r' || c == ';' || c == '(' || c == ')') {
+                // Processar a palavra atual
                 processarPalavra(palavraAtual.toString(), palavrasReservadas);
                 palavraAtual.setLength(0); // Limpar a palavra atual
     
@@ -56,6 +56,10 @@ public class MapearLexemas {
                 if (c != ' ' && c != '\t' && c != '\n' && c != '\r') {
                     processarPalavra(String.valueOf(c), palavrasReservadas);
                 }
+            } else if (Character.toString(c).matches(regex)) {
+                // Se o caractere for um caractere especial (exceto pontuação ABNT), processar a palavra atual
+                processarPalavra(palavraAtual.toString(), palavrasReservadas);
+                palavraAtual.setLength(0); // Limpar a palavra atual
             } else {
                 palavraAtual.append(c);
             }
